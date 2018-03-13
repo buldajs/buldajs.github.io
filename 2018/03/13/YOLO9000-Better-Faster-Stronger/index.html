@@ -87,10 +87,17 @@
 <meta property="og:site_name" content="熊阿熊纪元">
 <meta property="og:description" content="Yolo9000,也就是我们常说的Yolo v2版本，CVPR 2017 Best Paper Honorable Mention AbstractYolo9000是一个可以检测超过9000个类别的real-time的detection系统。提升后的Yolov2模型在PASCAL VOC和COCO数据集上都达到了STOA. VOC 2007数据集上，在67FPS下mAP达到76.8%, 40FP">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-03-13T08:34:55.510Z">
+<meta property="og:image" content="http://p37e6qws3.bkt.clouddn.com/YOLOV2_BETTER.png">
+<meta property="og:image" content="http://p37e6qws3.bkt.clouddn.com/Clustering_YOLOV2.png">
+<meta property="og:image" content="http://p37e6qws3.bkt.clouddn.com/Anchor_Compare.png">
+<meta property="og:image" content="http://p37e6qws3.bkt.clouddn.com/BOX_PRE_YOLOV2.png">
+<meta property="og:image" content="http://p37e6qws3.bkt.clouddn.com/YOLOV2_VOC_2007.png">
+<meta property="og:image" content="http://p37e6qws3.bkt.clouddn.com/DarkNet-19.png">
+<meta property="og:updated_time" content="2018-03-13T13:53:45.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="YOLO9000: Better, Faster, Stronger">
 <meta name="twitter:description" content="Yolo9000,也就是我们常说的Yolo v2版本，CVPR 2017 Best Paper Honorable Mention AbstractYolo9000是一个可以检测超过9000个类别的real-time的detection系统。提升后的Yolov2模型在PASCAL VOC和COCO数据集上都达到了STOA. VOC 2007数据集上，在67FPS下mAP达到76.8%, 40FP">
+<meta name="twitter:image" content="http://p37e6qws3.bkt.clouddn.com/YOLOV2_BETTER.png">
 
 
 
@@ -303,6 +310,117 @@
         <p>Yolo9000,也就是我们常说的Yolo v2版本，CVPR 2017 Best Paper Honorable Mention</p>
 <h2 id="Abstract"><a href="#Abstract" class="headerlink" title="Abstract"></a>Abstract</h2><p>Yolo9000是一个可以检测超过9000个类别的real-time的detection系统。提升后的Yolov2模型在PASCAL VOC和COCO数据集上都达到了STOA.</p>
 <p>VOC 2007数据集上，在67FPS下mAP达到76.8%, 40FPS下mAP达到78.6%，速度更快的情况下性能也超越了Faster RCNN(ResNet版本)以及SSD.</p>
+<h2 id="Better-Faster-Stronger"><a href="#Better-Faster-Stronger" class="headerlink" title="Better, Faster, Stronger"></a>Better, Faster, Stronger</h2><p>文章主要从性能，速度，鲁棒性三个层面介绍了Yolov2相对于Yolo的提升.</p>
+<h3 id="Better"><a href="#Better" class="headerlink" title="Better"></a>Better</h3><p>在性能上，YOLO落后于现有的STOA的detection系统主要来自于localization errors和low recall.</p>
+<p>因此本文作者主要关注提升recall和localization的同时还保留classification的精度。</p>
+<p>现有的CV问题越来越趋向于利用更深/更大的网络，利用模型的ensemble来获取更好的性能，但是YOLOv2的目标在提升精度的同时依旧足够快，可以应用在实时的检测系统中。</p>
+<p>因此作者优化的方向是简化网络，同时使得表达更加容易学习。作者通过一系列的方法来提升YOLO的性能，如表2所示。</p>
+<p><img src="http://p37e6qws3.bkt.clouddn.com/YOLOV2_BETTER.png" alt="YOLOV2_BETTER"></p>
+<ul>
+<li><p>Batch Normalization</p>
+<p>  BN可以加速网络的收敛，同时起到正则项的作用，避免模型的overfitting，并且可以丢弃网络中的dropout.</p>
+<p>  通过对每一个卷积层添加BN，整体在mAP上得到了2%的提升。</p>
+</li>
+<li><p>High Resolution Classifier</p>
+<p>  大多数STOA的detection系统使用ImageNet上预训练的分类模型，因为AlexNet开始网络的输入就是小于256x256的，原始的Yolo先用224x224的图像训练了分类器，然后在训练detection系统的时候将图像提升到了448x448,这就导致了网络从classification-&gt;detection不仅需要学习object detection相关的信息，还需要适配新的图像大小。这会使得训练变难。</p>
+<p>  Yolov2首先利用448x448的图像在imagenet上fine-tune分类网络10个epochs,这使得网络中的滤波器能更好地在高分辨率的输入上工作，然后再在detection网络中fine-tune,这样的high-resolution的classification network使得mAP增长了4%.</p>
+<p>  <strong>在目标检测领域倾向于用较高分辨率的图像进行训练测试，这样可以尽可能保留细节和小目标，个人感觉，不一定对</strong></p>
+</li>
+<li><p>Convolutional With Anchor Boxes</p>
+<p>  YOLO采用在卷积层的feature上进行全连接来预测bounding box的坐标，而Faster R-CNN则引入先验，在RPN网络中估计proposals的坐标相对于anchor boxes的偏移。</p>
+<p>  RPN在feature map的每个位置均估计这样一些关于预设anchor的offset，使用偏移估计替换坐标估计，使得问题简化，网络更容易训练</p>
+<p>  作者去掉了YOLO中的全连接层，也使用Anchor来预测bounding boxes：</p>
+<ul>
+<li>首先去除一层pooling层，增大了conv层输出的分辨率</li>
+<li>将图片从448x448收缩到416x416，<strong>这样做的目的是最后卷积层出来的feature大小是奇数，只有一个中心</strong>。因为大目标很可能占据图像的中心，而不是四个角，因此最好图像只有一个中心。</li>
+<li><p>使用416x416的输入，卷积层downsample 32倍，最后得到的feature map大小是13x13(原来是多一层pooling,图片大小448,因此downsample 64倍是7x7)</p>
+<p>Anchor的使用使得模型的预测box数量大大增加，这使得mAP有所下降，但是Recall大幅上升，<strong>Recall的上升意味着模型还有优化空间</strong></p>
+<p>69.5 mAP, 81% recall -&gt; 69.2 mAP, 88% recall</p>
+<p>在YOLO中使用anchor boxes，作者做了2点改进</p>
+</li>
+</ul>
+</li>
+<li><p>Dimension Clusters</p>
+<p>  Anchor box不是手工选取的，而是根据training集合的box分布，利用K-means方法聚类得到。</p>
+<p>  因为得到更好的priors的目的是得到更好的IOU scores,因此作者对k-means中的距离度量进行了修改：</p>
+<p>  $$d(box,centroid) = 1-IOU(box,centroid)$$</p>
+<p>  在聚类的时候，我们需要选取合适的重心数量$k$，$k$的数量需要根据recall和模型复杂度之间做一个权衡。这里下图表示了增加anchor,avg IOU的变化，最终作者选取了$k=5$</p>
+<p>  <img src="http://p37e6qws3.bkt.clouddn.com/Clustering_YOLOV2.png" alt="Clustering"></p>
+<p>  作者对标准的K-means中的距离度量，标准的Anchorbox,不同的k值进行了比较，证明了距离度量变化的有效性，Anchor聚类得到的有效性，这使得网络更容易进行训练。</p>
+<p>  <img src="http://p37e6qws3.bkt.clouddn.com/Anchor_Compare.png" alt="Anchor_Compare"></p>
+</li>
+<li><p>Direct location prediction</p>
+<p>  使用Anchor会导致另外一个问题:model instability(模型的不稳定性)，尤其是早期迭代的时候</p>
+<p>  而这种不稳定性大多数来自于对box中心位置$(x,y)$的预测，在RPN中，RPN网络预测$t_{x}$和$t_{y}$来计算得到$(x,y)$</p>
+<p>  $$x = (t_{x}<em>w_{a}) -x_{a}$$<br>  $$y = (t_{y}</em>h_{a}) -y_{a}$$</p>
+<p>  上式相当于说明box中心点预测是取决于anchor的$w_{a},h_{a},x_{a},y_{a}$，但是anchor可以在图像任意位置移动，这样无约束的条件没有考虑什么位置要用来预测box(还是yolo的网格概念)，因此作者认为这样的随机初始化会导致大量的时间才能学习到合适的偏移。个人觉得更多的是因为$x,y$依赖于$w_{a}$和$h_{a}$导致的。</p>
+<p>  区别于预测对于anchor的偏移，YOLOv2采用YOLO的思想预测相对于网格坐标的相对坐标</p>
+<p>  网络负责在每个cell位置预测5个bounding boxes，每个bounding box预测5个量：$t_{x},t_{y},t_{w},t_{h},t_{o}$</p>
+<p>  假定当前cell相对于左上角的偏移是$(c_{x},c_{y})$，anchor先验的宽和高是$p_{w},p_{h}$</p>
+<p>  这样需要预测的量可以如下计算得到：</p>
+<p>  $$b_{x} = \sigma(t_{x})+c_{x}$$</p>
+<p>  $$b_{y} = \sigma(t_{y})+c_{y}$$</p>
+<p>  $$b_{w} = p_{w}*e^{t_{w}}$$</p>
+<p>  $$b_{h} = p_{h}*e^{t_{h}}$$</p>
+<p>  $$ Pr(object)*IOU(b,object) = \sigma(t_{o}) $$</p>
+<p>  作者认为约束了预测的位置，参数可以更容易学习，如下图所示，个人认为更多是因为预测的量变简单了。</p>
+<p>  <img src="http://p37e6qws3.bkt.clouddn.com/BOX_PRE_YOLOV2.png" alt="BOX_PRE_YOLOV2"></p>
+<p>  这样利用聚类得到初始候选anchor，修改预测的方案，使得和简单的anchor预测相比，mAP提高了5%,从69.6%-&gt;74.4%</p>
+</li>
+</ul>
+<ul>
+<li><p>Fine-Grained Features</p>
+<p>  13x13的特征图进行预测对于大的object来说是足够了，但是对于小的object还需要更细粒度的特征，因此作者将前层的26x26的特征通过<strong>passthrough layer</strong>加了进来。</p>
+<p>  passthrough将26x26x512的higher resolution feature和13x13x2048的low resolution feature结合了起来，具体结合的解释：</p>
+<pre><code>本质其实就是特征重排，26*26*512的feature map分别按行和列隔点采样，可以得到4幅13*13*512的特征，把这4张特征按channel串联起来，就是最后的13*13*2048的feature map.还有就是，passthrough layer本身是不学习参数的，直接用前面的层的特征重排后拼接到后面的层，越在网络前面的层，感受野越小，有利于小目标的检测。
+</code></pre><p>  作者利用这种高低层的特征融合，涨了1个点。</p>
+</li>
+<li><p>Multi-scale training</p>
+<p>  原始的yolo用的是448x448的输入，增加了anchor之后，作者将输入变成了416x416，因为模型只有conv和pool层，因此可以多尺度的训练。</p>
+<p>  具体的训练做法是，每10个batchs改变一次输入图像大小，因为downsample32倍，因此有32种尺度的图像，从320,352,…,608，最小的是320,最大的是608</p>
+<p>  问题是测试输入还resize到416x416吗？</p>
+<p>  作者认为这使得YOLOV2可以在speed和accuracy之间切换，在低分辨率288x288情况下，YOLOv2可以跑到90FPS，mAP类似Fast RCNN,在高分辨率情况下，在VOC2007上可以达到78.6的mAP,速度也客观。</p>
+<p>  <img src="http://p37e6qws3.bkt.clouddn.com/YOLOV2_VOC_2007.png" alt="YOLOV2_VOC_EXPER"></p>
+<p>  注意的是这里YOLOv2的模型都是同一个，只是测试图片大小不同。</p>
+</li>
+</ul>
+<h3 id="Faster"><a href="#Faster" class="headerlink" title="Faster"></a>Faster</h3><p>作者认为VGG16很冗余，YOLO框架自己开发了一套基于GoogleNet的特征提取网络，网络比VGG16快，参数量从30.69billion降到了8.52billion,但同时精度也降了。</p>
+<ul>
+<li><p>Darknet-19</p>
+<p>  Yolov2使用了新的特征提取架构，也是和VGG一样使用3x3卷积，每次pooling之后将channel数翻倍，使用global average pooling进行预测，使用1x1卷积在3x3卷积之间来压缩信息，使用BN加速收敛，正则化模型。</p>
+<p>  最后的模型叫Darknet-19,有19个conv层和5个max-pooling层,Darknet-19参数更少，精度比VGG还高(ImageNet上)</p>
+<p>  DarkNet架构如下：</p>
+<p>  <img src="http://p37e6qws3.bkt.clouddn.com/DarkNet-19.png" alt="DarkNet-19"></p>
+</li>
+<li><p>Traning for detection</p>
+<p>  把最后的一层卷积层去掉了，增加了3层3x3x1024的卷积层，最终用1x1卷积进行预测，比如对于VOC最终预测的数量为125个，每个位置5个box,每个box5个坐标和20个类别相关概率</p>
+<p>  <strong>要注意！！！！这边类别相关概率不再和cell挂钩，而是和每个box挂钩了！！！！</strong></p>
+<p>  所以感觉这里的Faster到底和谁比的？。。。</p>
+</li>
+</ul>
+<h3 id="Stronger"><a href="#Stronger" class="headerlink" title="Stronger"></a>Stronger</h3><p><br>这部分似乎提出了joint训练分类和检测，不关系就不看了。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>Yolov2的提升主要有以下几点：</p>
+<ul>
+<li><p>用了BN</p>
+</li>
+<li><p>训练预训练分类模型的时候用了高分辨率的图像refine</p>
+</li>
+<li><p>使用了Anchor,anchor先验通过k-means聚类得到，并且对box坐标置信度的预测，与当前cell位置，anchor大小绑定</p>
+</li>
+<li><p>利用passthrough层引入低层高分辨率特征来帮助提升小目标检测</p>
+</li>
+<li><p>多尺度训练，使得同一个模型在不同输入大小有很好鲁棒性，可以选择要速度还是精度</p>
+</li>
+<li><p>重构了Darknet-19架构</p>
+</li>
+<li><p>类别相关的概率与box挂钩而不是和cell挂钩！！</p>
+</li>
+</ul>
+<p>我们要注意的几个点：</p>
+<p>1.训练的时候多尺度darknet其实帮我们实现了，测试的时候我们指定了固定大小(在cfg中416x416)，因此实际给多大图都无关</p>
+<p>2.关于box回归，作者重新定义一方面是因为和网格预测关联起来，另外一方面RPN预测相对于anchor的偏移，确实会跑得很远。</p>
+<p>3.anchor聚类得到效果挺不错的！</p>
+<p>4.需要看下VGG,GoogleNet,Yolov1,Yolov2的网络结构变化</p>
 
       
     </div>
@@ -464,7 +582,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Abstract"><span class="nav-number">1.</span> <span class="nav-text">Abstract</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Abstract"><span class="nav-number">1.</span> <span class="nav-text">Abstract</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Better-Faster-Stronger"><span class="nav-number">2.</span> <span class="nav-text">Better, Faster, Stronger</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Better"><span class="nav-number">2.1.</span> <span class="nav-text">Better</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Faster"><span class="nav-number">2.2.</span> <span class="nav-text">Faster</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Stronger"><span class="nav-number">2.3.</span> <span class="nav-text">Stronger</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
             
 
           </div>
