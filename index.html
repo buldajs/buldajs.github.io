@@ -232,6 +232,338 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://buldajs.github.io/2018/03/24/sort_algrithms/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="buldajs">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="熊阿熊纪元">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/03/24/sort_algrithms/" itemprop="url">Sort algorithm</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-24T21:04:37+08:00">
+                2018-03-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="排序算法"><a href="#排序算法" class="headerlink" title="排序算法"></a>排序算法</h1><p>排序算法是最常见的算法，也是面试当中很可能被问到的算法，因此需要学会。<br></p>
+<ul>
+<li><p>排序算法的稳定性</p>
+<p>  保证排序前2个相等的数其在序列的前后位置顺序和排序后它们两个的前后位置顺序相同。在简单形式化一下，如果Ai = Aj, Ai原来在位置前，排序后Ai还是要在Aj位置前。</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>算法</th>
+<th>平均时间复杂度</th>
+<th>最坏时间复杂度</th>
+<th>空间复杂度</th>
+<th>稳定性</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>选择排序</td>
+<td>$O(n^2)$</td>
+<td>$O(n^2)$</td>
+<td>$O(1)$</td>
+<td>不稳定</td>
+</tr>
+<tr>
+<td>冒泡排序</td>
+<td>$O(n^2)$</td>
+<td>$O(n^2)$</td>
+<td>$O(1)$</td>
+<td>稳定</td>
+</tr>
+<tr>
+<td>插入排序</td>
+<td>$O(n^2)$</td>
+<td>$O(n^2)$</td>
+<td>$O(1)$</td>
+<td>稳定</td>
+</tr>
+<tr>
+<td>归并排序</td>
+<td>$O(nlogn)$</td>
+<td>$O(nlogn)$</td>
+<td>$O(n)$ (数组的实现) $O(1)$ (链表实现)</td>
+<td>稳定</td>
+</tr>
+<tr>
+<td>快速排序</td>
+<td>$O(nlogn)$</td>
+<td>$O(n^2)$</td>
+<td>$O(logn)$(因为递归调用)</td>
+<td>不稳定</td>
+</tr>
+<tr>
+<td>堆排序</td>
+<td>$O(nlogn)$</td>
+<td>$O(nlogn)$</td>
+<td>$O(1)$</td>
+<td>不稳定</td>
+</tr>
+<tr>
+<td>计数排序</td>
+<td>$O(n+k)$</td>
+<td>$O(n+k)$</td>
+<td>$O(n+k)$</td>
+<td>稳定</td>
+</tr>
+</tbody>
+</table>
+<h2 id="基于比较的排序算法"><a href="#基于比较的排序算法" class="headerlink" title="基于比较的排序算法"></a>基于比较的排序算法</h2><p>基于比较的排序算法是不能突破$O(nlogn)$的复杂度的</p>
+<h3 id="选择排序"><a href="#选择排序" class="headerlink" title="选择排序"></a>选择排序</h3><ul>
+<li><p>思想</p>
+<p>  选择排序是一种蛮力法的排序思想。</p>
+<p>  从第一个位置起，扫描整个数组，找到最小元素，与第一个位置元素互换.</p>
+<p>  再从第二个元素起扫描整个数组，找到最小元素与第二个位置元素交换.</p>
+<p>  依次，第i遍扫描时(0&lt;i&lt;size-2)，算法在最后的n-i个元素中找到最小元素，然后与array[i]交换位置.</p>
+</li>
+<li><p>示意图</p>
+<p>  <img src="http://p0jfwkmnt.bkt.clouddn.com/xuanze.jpg" alt="select_sort"></p>
+</li>
+<li><p>C++代码实现</p>
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">* 选择排序</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">selectSort</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&amp; arr)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(arr.empty())	<span class="keyword">return</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;arr.size(); i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">int</span> min_idx = i;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> j=i+<span class="number">1</span>; j&lt;arr.size(); j++)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span>(arr[j]&lt;arr[min_idx])</span><br><span class="line">                min_idx = j;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(min_idx!=i)</span><br><span class="line">            swap(arr[i],arr[min_idx]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>复杂度</p>
+<p>  对任何输入，选择排序的时间复杂度均为$O(n^2)$,而键的交换次数总是$O(n-1)$,这是选择排序的优势。</p>
+</li>
+</ul>
+<h3 id="冒泡排序"><a href="#冒泡排序" class="headerlink" title="冒泡排序"></a>冒泡排序</h3><ul>
+<li><p>思想</p>
+<p>  冒泡排序是蛮力法的一种排序思想。</p>
+<p>  通过比较数据中的相邻元素，如果是逆序就交换位置，重复多次直到最大的元素”沉到”列表的最后一个位置。</p>
+<p>  第二遍时将第二大的元素沉下去，依次做n-1遍。</p>
+</li>
+<li><p>示意图(单次冒泡)</p>
+<p>  <img src="http://p0jfwkmnt.bkt.clouddn.com/maopao.png" alt="bubble_sort"></p>
+</li>
+<li><p>C++代码实现</p>
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">* 冒泡排序</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">bubbleSort</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&amp; arr)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(arr.empty())	<span class="keyword">return</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=arr.size()<span class="number">-1</span>; i&gt;<span class="number">0</span>; i--)</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>; j&lt;i; j++)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">//printfArray(arr);</span></span><br><span class="line">            <span class="keyword">if</span>(arr[j]&gt;arr[j+<span class="number">1</span>])</span><br><span class="line">                swap(arr[j],arr[j+<span class="number">1</span>]);</span><br><span class="line">        &#125;</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>复杂度</p>
+<p>  对于固定的规模n的数组，这个版本的冒泡的键值比较次数是相同的，都是$O(n^2)$</p>
+<p>  如果对列表比较一遍以后没有交换元素的位置，那么这个表已经有序，可以停止算法(<strong>改进</strong>)</p>
+<p>  但是最坏情况以及平均情况下，算法的时间复杂度还是$O(n^2)$</p>
+</li>
+</ul>
+<h3 id="插入排序"><a href="#插入排序" class="headerlink" title="插入排序"></a>插入排序</h3><ul>
+<li><p>思想</p>
+<p>  插入排序是一种减治法的排序思想。</p>
+<p>  假设对于大小为n的数组A，如果A[0,n-2]排序已经解决了，那么我们可以在此基础上把A[n-1]考虑进来，<strong>从右到左扫描这个有序数组A[0,n-2]</strong>，直到遇到第一个小于等于A[n-1]的元素，将其插在后面.</p>
+<p>  因此整个插入排序中数组分为了有序和无序两部分。</p>
+</li>
+<li><p>示意图</p>
+<p>  <img src="http://p0jfwkmnt.bkt.clouddn.com/charu.png" alt="insert_sort"></p>
+</li>
+<li><p>C++代码实现</p>
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">* 插入排序</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">insertSort</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&amp; arr)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(arr.empty()) <span class="keyword">return</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>; i&lt;arr.size(); i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">int</span> j = i<span class="number">-1</span>;</span><br><span class="line">        <span class="keyword">int</span> curr = arr[i];</span><br><span class="line">        printfArray(arr);</span><br><span class="line">        <span class="keyword">while</span>(j&gt;<span class="number">-1</span> &amp;&amp; arr[j]&gt;curr)</span><br><span class="line">        &#123;</span><br><span class="line">            arr[j+<span class="number">1</span>] = arr[j];</span><br><span class="line">            j--;</span><br><span class="line">        &#125;</span><br><span class="line">        arr[j+<span class="number">1</span>] = curr;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>复杂度</p>
+<p>  最坏的情况下，如果是一个严格递减的数组，键值比较次数为$\frac{(n-1)n}{2}\in O(n^2)$,与选择排序是一致的。</p>
+<p>  最好的情况，对于一个有序数组，键值比较次数为$n-1 \in O(n)$</p>
+<p>  平均情况下复杂度是$\frac{n^2}{4} \in O(n^{2})$</p>
+<p>  插入排序平均性能比最坏情况快一倍，以及遇到基本有序的数组时表现出来的性能，是其领先于蛮力法的冒泡和选择的优势。</p>
+</li>
+</ul>
+<h3 id="归并排序"><a href="#归并排序" class="headerlink" title="归并排序"></a>归并排序</h3><ul>
+<li><p>思想</p>
+<p>  归并排序其实是一种分治法的排序思想，将问题分解为几个子问题求解，并最终合并子问题的解。</p>
+<p>  具体过程为，对于需要排序的数组A[0,n-1]，将其一分为二:A[0,n/2-1]和A[n/2,n-1]，对每个子数组递归排序，最终将排序完的的子数组合并为一个有序数组。</p>
+<ul>
+<li><p>合并过程</p>
+<p>  初始状态下，两个指针分别指向两个待合并数组的第一个元素，然后比较大小，小的添加到新创建的数组中，接着，被复制数组中的指针后移，指向该较小元素的后继，上述操作一致持续到两个数组中的一个被处理完为止，然后将未处理完的数组剩下的元素复制到新数组的尾部。</p>
+</li>
+</ul>
+</li>
+<li><p>示意图</p>
+<p>  <img src="http://p0jfwkmnt.bkt.clouddn.com/guibing.jpg" alt="merge_sort"></p>
+</li>
+<li><p>C++代码实现</p>
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">* 归并两个子数组</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">merge</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&amp; arr, <span class="keyword">int</span> start, <span class="keyword">int</span> mid, <span class="keyword">int</span> end)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; tmp;</span><br><span class="line">    <span class="keyword">int</span> i = start; <span class="keyword">int</span> j = mid+<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span>(i&lt;mid+<span class="number">1</span> &amp;&amp; j &lt;end+<span class="number">1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span>(arr[i]&lt;arr[j])</span><br><span class="line">        &#123; </span><br><span class="line">            tmp.push_back(arr[i]);</span><br><span class="line">            i++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">        &#123;</span><br><span class="line">            tmp.push_back(arr[j]);</span><br><span class="line">            j++;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">while</span>(i&lt;mid+<span class="number">1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        tmp.push_back(arr[i]);</span><br><span class="line">        i++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">while</span>(j&lt;end+<span class="number">1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        tmp.push_back(arr[j]);</span><br><span class="line">        j++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> k=<span class="number">0</span>; k&lt;tmp.size(); k++,start++)</span><br><span class="line">    &#123;</span><br><span class="line">        arr[start] = tmp[k];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">* 递归进行归并排序</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">mergeSortMain</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&amp; arr, <span class="keyword">int</span> start, <span class="keyword">int</span> end)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(start&lt;end)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">int</span> mid = (start+end)/<span class="number">2</span>;</span><br><span class="line">        mergeSortMain(arr,start,mid);</span><br><span class="line">        mergeSortMain(arr,mid+<span class="number">1</span>,end);</span><br><span class="line">        merge(arr,start,mid,end);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">* 归并排序</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">mergeSort</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&amp; arr)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> start=<span class="number">0</span>; <span class="keyword">int</span> end=arr.size()<span class="number">-1</span>;</span><br><span class="line">    mergeSortMain(arr,start,end);</span><br><span class="line">    <span class="keyword">return</span> ;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>复杂度</p>
+<p>  因为使用了分治的思想，最坏情况下(最小的元素轮流来自不同的数组)，Merge的比较次数是n-1次，最坏情况下的视觉复杂度是$O(nlogn)$，更精确的结果是$nlog_{2}n-n+1$</p>
+<p>  归并排序最坏情况下的键值比较次数十分接近基于比较的排序算法在理论情况下能达到的最少次数。</p>
+<p>  平均情况下，归并排序算法的平均效率也在$O(nlogn)$，归并排序与后面提到的快速排序和堆排序比较起来，显著的优点是其稳定性，缺点是需要开辟额外的空间。</p>
+</li>
+</ul>
+<h3 id="快速排序"><a href="#快速排序" class="headerlink" title="快速排序"></a>快速排序</h3><ul>
+<li><p>思想</p>
+<p>  也是分治的一种排序方法，但是不同于归并排序根据位置划分，快速排序按元素的值进行划分。</p>
+<p>  划分是对给定数组中的元素重新排列，使得A[s]左边的元素都小于A[s]，右边的元素都大于A[s]。这样建立一个划分后，A[s]已经处于其在有序数组中的最终位置，接下来再对A[s]前和A[s]后的子数组分别排序。</p>
+</li>
+<li><p>示意图</p>
+<p>  <img src="http://p0jfwkmnt.bkt.clouddn.com/kuaisu.png" alt="kuaisu_sort"></p>
+</li>
+<li><p>C++代码实现</p>
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">* 划分函数，并返回划分点</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">partition</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&amp; arr, <span class="keyword">int</span> start, <span class="keyword">int</span> end)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> pivot = arr[end];</span><br><span class="line">    <span class="keyword">int</span> i=start;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> j=start; j&lt;end; j++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span>(arr[j]&lt;pivot)</span><br><span class="line">        &#123;</span><br><span class="line">            swap(arr[i],arr[j]);</span><br><span class="line">            i++;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    swap(arr[i],arr[end]);</span><br><span class="line">    <span class="comment">// return partition localtion</span></span><br><span class="line">    <span class="keyword">return</span> i;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">quickSortImpl</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&amp; arr, <span class="keyword">int</span> start, <span class="keyword">int</span> end)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(start&lt;end)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">int</span> idx;</span><br><span class="line">        idx = partition(arr,start,end);</span><br><span class="line">        quickSortImpl(arr,start,idx<span class="number">-1</span>);</span><br><span class="line">        quickSortImpl(arr,idx+<span class="number">1</span>,end);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">* 快速排序</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">quickSort</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&amp; arr)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> start=<span class="number">0</span>; <span class="keyword">int</span> end=arr.size()<span class="number">-1</span>;</span><br><span class="line">    quickSortImpl(arr,start,end);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>复杂度</p>
+<p>  最坏的情况下，如果我们考虑A[0,n-1]是一个严格递增的数组，如果我们选取了A[0]为分割点，扫描会停在A[1]，这样快排会继续对严格递增的A[1,n-1]进行排序，一直到现在A[n-2,n-1].<br>  </p>
+<p>  因此最坏情况下，快速排序的复杂度可以到$O(n^2)$</p>
+<p>  平均情况下，快速排序的复杂度是$1.39nlog_{2}n$,比最优情况多执行39%操作，内层效率高，处理随机数组时速度比归并要快。</p>
+</li>
+</ul>
+<h3 id="堆排序"><a href="#堆排序" class="headerlink" title="堆排序"></a>堆排序</h3><ul>
+<li><p>堆的基础</p>
+<ul>
+<li><p>堆的概念</p>
+<p>  堆可以定义为一棵二叉树，树中的节点需要满足如下两个条件：</p>
+<ul>
+<li><p>这个二叉树是基本完备的(完全二叉树)，树的每一层都是满的，除了最后一层最右边的元素可能缺位。</p>
+</li>
+<li><p>父母优势：父节点的键值总是大于等于(最大堆)任何一个子节点的键值</p>
+<p>因此堆有一个很重要的性质，<strong>堆的根总是包含了堆的最大元素</strong></p>
+</li>
+</ul>
+</li>
+<li><p>堆的存储</p>
+<p>  一般采用数组来存储堆，$i$节点的父节点下标为$(i-1)/2$，左右子节点的下标分别为$2<em>i+1$和$2</em>i+2$.</p>
+<p>  如下图所示.</p>
+<p>  <img src="http://p0jfwkmnt.bkt.clouddn.com/dui_representation.png" alt="heap_representation"></p>
+</li>
+</ul>
+</li>
+<li><p>堆的构造</p>
+<p>  考虑所有的非叶子节点(从下往上考虑)，假设当前考虑节点$i$，</p>
+<p>  寻找节点$i$的左右子女中最大的键值</p>
+<ol>
+<li>如果大于当前节点的值，交换两者的值，此时因为是自下而上的，交换后子节点的父母优势不一定满足，因此遍历检查该子节点的父母优势，直到底部位置。</li>
+<li>如果小于当前节点，当前节点父母优势成立，考虑其他节点。</li>
+</ol>
+</li>
+<li><p>从堆中删除最大的键</p>
+<ol>
+<li>将根节点(最大的键)与最后一个键交换</li>
+<li>堆的规模减1，不考虑最后一个删除的节点</li>
+<li>堆新加进来的键，沿着树向下筛选来对这棵树(-1)进行堆化，得到一个新的最大堆</li>
+</ol>
+</li>
+<li><p>堆排序</p>
+<p> 堆排序正是利用了堆的根总是包含了堆的最大元素这一个特性，依次删除最大键(移到最后)来进行排序.</p>
+<ul>
+<li><p>流程</p>
+<p>  1.对一个数组构造堆<br>  2.删除最大键，这样反复操作最后得到排序的数组。</p>
+</li>
+</ul>
+</li>
+<li><p>C++代码实现</p>
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">* 在某个位置上BottomUp构造堆观察其是否符合</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">buildMaxHeap</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&amp; arr, <span class="keyword">int</span> i, <span class="keyword">int</span> size)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> child = <span class="number">2</span>*i+<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span>(child&lt;size)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// select max child in left and right </span></span><br><span class="line">        <span class="keyword">if</span>(child+<span class="number">1</span>&lt;size &amp;&amp; arr[child]&lt;arr[child+<span class="number">1</span>])</span><br><span class="line">            child++;</span><br><span class="line">        <span class="keyword">if</span>(arr[i]&lt;arr[child])</span><br><span class="line">        &#123;</span><br><span class="line">            swap(arr[i],arr[child]);</span><br><span class="line">            i = child;</span><br><span class="line">            child = <span class="number">2</span>*i+<span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">* 堆排序</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">headSort</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&amp; arr)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// build full max-heap</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=arr.size()/<span class="number">2</span><span class="number">-1</span>; i&gt;=<span class="number">0</span>; i--)</span><br><span class="line">        buildMaxHeap(arr,i,arr.size());</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=arr.size()<span class="number">-1</span>; i&gt;=<span class="number">0</span>; i--)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// swap max-value of heap and the final value</span></span><br><span class="line">        swap(arr[<span class="number">0</span>],arr[i]);</span><br><span class="line">        <span class="comment">// after change, update max-heap</span></span><br><span class="line">        buildMaxHeap(arr,<span class="number">0</span>,i);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>复杂度分析</p>
+<p>  首先构造堆的时间效率是$O(n)$，而第二阶段删除的总效率是$O(nlogn)$，因此堆排序的时间效率是$O(nlogn)$,无论是最差还是平均。</p>
+<p>  堆排序和合并排序，快速排序的时间效率是统一的，而且和合并排序比，堆排序不需要额外的存储空间。针对随机文件，实验得出，堆排序比快速排序要慢，但是和合并排序比还是有竞争力。</p>
+</li>
+</ul>
+<h2 id="基于非比较的排序算法"><a href="#基于非比较的排序算法" class="headerlink" title="基于非比较的排序算法"></a>基于非比较的排序算法</h2><h3 id="计数排序"><a href="#计数排序" class="headerlink" title="计数排序"></a>计数排序</h3><h3 id="桶排序"><a href="#桶排序" class="headerlink" title="桶排序"></a>桶排序</h3><h3 id="基数排序"><a href="#基数排序" class="headerlink" title="基数排序"></a>基数排序</h3>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://buldajs.github.io/2018/03/13/YOLO9000-Better-Faster-Stronger/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -948,126 +1280,6 @@
 <p>区别在于用的loss的差异.</p>
 <p>对于depth estimation还可以利用rgb图像和depth图像之间结构的关联性以及其他特性去构建loss,来提升性能。</p>
 <p>个人浅显的理解，有问题请指出～</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://buldajs.github.io/2018/02/27/my-test/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="buldajs">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="熊阿熊纪元">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/02/27/my-test/" itemprop="url">my_test</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-02-27T14:21:27+08:00">
-                2018-02-27
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>my test</p>
 
           
         
